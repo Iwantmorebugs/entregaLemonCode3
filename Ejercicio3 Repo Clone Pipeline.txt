@@ -1,0 +1,30 @@
+1)Con el método de CI job permissions model
+¿Qué ocurre si el repo que estoy clonando no estoy cómo miembro?
+
+-No se podría clonar ya que habría que ser miembro tipo maintaner u owner del grupo/proyecto para poder hacerlo.
+
+2)Con el método deploy keys
+Crear deploy key en el repo springapp y poner solo lectura
+Crear pipeline que usando la deploy key
+
+
+stages:
+  - clone
+
+build:
+  stage: clone
+  image:
+    entrypoint: ['']
+    name: alpine/git:latest
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_TOOLKIT"
+    - echo "$SSH_PRIVATE_KEY_TOOLKIT" > ~/.ssh/id_rsa; chmod 0600 ~/.ssh/id_rsa
+    - echo "StrictHostKeyChecking no " > /root/.ssh/config
+    - git config --global http.sslVerify false
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.email "$GITLAB_USER_NAME"
+    - git clone git@gitlab.local:root/springapp.git
+  script:
+    - echo "springapp cloned!"
+

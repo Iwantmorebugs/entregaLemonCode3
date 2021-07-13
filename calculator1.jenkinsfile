@@ -1,0 +1,28 @@
+pipeline {
+    agent any 
+    stages{
+        stage("Checkout"){
+            steps{
+               checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-user-github', url: 'https://github.com/Iwantmorebugs/calculator.git']]])
+            }
+        }
+        stage ("Compile") {
+        	steps {
+        	   echo "Build Number: $BUILD_NUMBER"
+        	   sh '''
+        	   ls
+        	   chmod +x gradlew
+        	   ./gradlew compileJava
+        	   '''
+            }
+        }
+        stage ("Test") {
+        	steps {
+        	   sh '''
+        	   chmod +x gradlew
+        	   ./gradlew test
+        	   '''
+            }
+        }
+    }
+}

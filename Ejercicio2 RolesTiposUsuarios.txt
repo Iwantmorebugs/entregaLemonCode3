@@ -1,0 +1,31 @@
+GUEST:
+
+Commit: No
+Ejecutar pipeline manualmente: No
+Push and pull del repo: No
+Merge request: No
+Acceder a la administración del repo: No
+
+REPORTER:
+
+Commit: si
+Ejecutar pipeline manualmente: No
+Push and pull del repo: si
+Merge request: Se pueden ver pero no se pueden ni crear ni aprobar ni mergear
+Acceder a la administración del repo: No
+
+DEVELOPER:
+
+Commit: si
+Ejecutar pipeline manualmente: Si
+Push and pull del repo: si
+Merge request: Se pueden ver y se pueden aprobar, pero no se puede mergear
+Acceder a la administración del repo: No
+
+MAINTANER
+
+Commit: si
+Ejecutar pipeline manualmente: Si
+Push and pull del repo: si
+Merge request: Se pueden ver,aprobar y mergear
+Acceder a la administración del repo: Si

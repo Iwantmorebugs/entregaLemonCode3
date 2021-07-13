@@ -1,0 +1,46 @@
+variables:
+  REGISTRY_PATH: "$CI_REGISTRY/$CI_PROJECT_PATH"
+
+stages:
+  - build
+  - test
+  - docker:build
+  - docker:deploy
+build:
+  image: maven:3.6.3-jdk-8-slim
+  stage: build
+  script:
+    - mvn clean package
+  artifacts:
+    when: on_success
+    paths:
+      - "target/*.jar"
+
+test:
+  image: maven:3.6.3-jdk-8-slim
+  stage: test
+  dependencies:
+    - build
+  script:
+    - mvn verify
+  artifacts:
+    when: on_success
+    paths:
+      - "target/"
+
+docker:build:
+  stage: docker:build
+  
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $REGISTRY_PATH
+  script:
+    - echo $CI_REGISTRY $CI_REGISTRY_USER $CI_REGISTRY_PASSWORD
+    - docker build -t $REGISTRY_PATH:$CI_COMMIT_SHA . 
+    - docker push $REGISTRY_PATH:$CI_COMMIT_SHA
+    
+docker:deploy:
+    stage: deploy
+   before_script:
+     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $REGISTRY_PATH
+   script:
+     - docker run --name "springapp" -d -p 8080:8080 $REGISTRY_PATH:$CI_COMMIT_SHA
